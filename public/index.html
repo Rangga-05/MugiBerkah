@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCM Mugi Berkah — Sistem Manajemen Rantai Pasok Bahan Baku</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            espresso: {
+              50: '#fdf8f6',
+              100: '#f2e8e5',
+              200: '#eaddd7',
+              300: '#e0cec7',
+              400: '#d2bab0',
+              500: '#a18072',
+              600: '#8a6552',
+              700: '#6f4e37',
+              800: '#4a3323',
+              900: '#2c1d12',
+              950: '#1a1008',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #faf8f5;
+      color: #1c1917;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f5f5f4;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d6d3d1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a8a29e;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-amber-200 selection:text-espresso-900">
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2.5 max-w-md w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 1: LOGIN & QUICK DEMO ACCESS                                     -->
+  <!-- ===================================================================== -->
+  <div id="login-view" class="min-h-screen flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-stone-100 via-amber-50/40 to-stone-200/70">
+    <div class="max-w-5xl w-full mx-auto">
+      <!-- Header Branding -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-100/90 border border-amber-300/70 text-amber-900 text-xs font-semibold tracking-wide uppercase mb-3 shadow-sm">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-700"></i>
+          <span>Enterprise Architecture • TOGAF 4 Pilar (Supply Chain Management)</span>
+        </div>
+        <div class="flex items-center justify-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-espresso-800 text-amber-200 flex items-center justify-center shadow-md">
+            <i data-lucide="coffee" class="w-6 h-6"></i>
+          </div>
+          <div class="text-left">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">Kedai Kopi & Pastry "Mugi Berkah"</h1>
+            <p class="text-sm text-stone-600 font-medium">Sistem Manajemen Rantai Pasok Bahan Baku & Portal Pengadaan Pemasok</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid: Login Form + Quick Demo Panel -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Left: Standard Login Form (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-stone-200/90 p-6 sm:p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-lg font-bold text-stone-900">Masuk ke Sistem SCM</h2>
+                <p class="text-xs text-stone-500 mt-0.5">Gunakan akun Admin Gudang atau Portal Pemasok</p>
+              </div>
+              <span id="db-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-stone-100 text-stone-600 border border-stone-200">
+                <span class="w-2 h-2 rounded-full bg-stone-400"></span>
+                Memeriksa...
+              </span>
+            </div>
+
+            <!-- Quick Autofill Pills -->
+            <div class="mb-4 p-3 rounded-xl bg-amber-50/70 border border-amber-200/80">
+              <div class="text-[11px] font-bold text-amber-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-700"></i>
+                <span>Isi Cepat Email & Password:</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" data-autofill-email="admin@mugiberkah.id" class="autofill-role-btn px-2.5 py-1 rounded-lg bg-espresso-800 hover:bg-espresso-900 text-white text-[11px] font-bold transition">
+                  Admin
+                </button>
+                <button type="button" data-autofill-email="roastery@nusantara.id" class="autofill-role-btn px-2.5 py-1 rounded-lg bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold transition">
+                  Pemasok Kopi
+                </button>
+                <button type="button" data-autofill-email="dairy@lembangfresh.id" class="autofill-role-btn px-2.5 py-1 rounded-lg bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold transition">
+                  Pemasok Dairy
+                </button>
+                <button type="button" data-autofill-email="pastry@bakerschoice.id" class="autofill-role-btn px-2.5 py-1 rounded-lg bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold transition">
+                  Pemasok Pastry
+                </button>
+              </div>
+            </div>
+
+            <form id="login-form" class="space-y-4">
+              <div>
+                <label for="login-email" class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">Alamat Email</label>
+                <div class="relative">
+                  <i data-lucide="mail" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                  <input
+                    id="login-email"
+                    type="email"
+                    required
+                    placeholder="admin@mugiberkah.id"
+                    class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-600/20 focus:border-amber-700 transition"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="login-password" class="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                <div class="relative">
+                  <i data-lucide="lock" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                  <input
+                    id="login-password"
+                    type="password"
+                    required
+                    placeholder="••••••••••••"
+                    value="mugiberkah123"
+                    class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-600/20 focus:border-amber-700 transition"
+                  />
+                </div>
+                <p class="text-[11px] text-stone-500 mt-1.5">Password default seluruh akun demo: <code class="px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 font-mono font-semibold border border-amber-200">mugiberkah123</code></p>
+              </div>
+
+              <button
+                type="submit"
+                id="login-submit-btn"
+                class="w-full py-2.5 px-4 rounded-xl bg-espresso-800 hover:bg-espresso-900 text-white font-semibold text-sm shadow-sm hover:shadow transition flex items-center justify-center gap-2"
+              >
+                <i data-lucide="log-in" class="w-4 h-4"></i>
+                <span>Masuk Sekarang</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="mt-6 pt-5 border-t border-stone-100 text-xs text-stone-500 space-y-1.5">
+            <div class="flex items-center gap-2 text-stone-700 font-semibold">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-700"></i>
+              <span>Batasan Ruang Lingkup (Strict SCM Scope)</span>
+            </div>
+            <p class="leading-relaxed text-[11px]">
+              Fokus pada <strong>Upstream Procurement</strong> (Purchase Order lintas entitas) & <strong>Internal Raw Material Inventory</strong> (Reorder Point Alert & Goods Receipt Atomik).
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Quick Demo Login Panel (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-stone-200/90 p-6 sm:p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-amber-100 text-amber-800">
+                  <i data-lucide="zap" class="w-4 h-4"></i>
+                </span>
+                <div>
+                  <h2 class="text-lg font-bold text-stone-900">Akses Cepat Demo (1-Klik Login)</h2>
+                  <p class="text-xs text-stone-500">Klik salah satu kartu peran di bawah untuk langsung masuk tanpa mengetik akun</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Demo Account Cards rendered dynamically -->
+            <div id="demo-accounts-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-5">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- Flow Diagram Info Box -->
+          <div class="mt-6 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+            <div class="text-xs font-bold text-stone-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <i data-lucide="git-merge" class="w-3.5 h-3.5 text-amber-700"></i>
+              <span>Alur Siklus Purchase Order (State Machine SCM)</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-semibold">
+              <span class="px-2 py-1 rounded-md bg-amber-100 text-amber-800 border border-amber-300">1. PENDING (Admin Buat PO)</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-stone-400"></i>
+              <span class="px-2 py-1 rounded-md bg-blue-100 text-blue-800 border border-blue-300">2. PROCESSING (Pemasok Proses)</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-stone-400"></i>
+              <span class="px-2 py-1 rounded-md bg-purple-100 text-purple-800 border border-purple-300">3. SHIPPED (Pemasok Kirim)</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-stone-400"></i>
+              <span class="px-2 py-1 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300">4. RECEIVED (Admin Terima & Stok +IN)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 2: MAIN APPLICATION SHELL (SIDEBAR + TOPBAR + CONTENT)           -->
+  <!-- ===================================================================== -->
+  <div id="app-view" class="hidden min-h-screen flex flex-col lg:flex-row bg-[#faf8f5]">
+
+    <!-- SIDEBAR (Fixed Lock on Desktop) -->
+    <aside class="w-full lg:w-64 lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:overflow-y-auto bg-espresso-900 text-stone-200 flex-shrink-0 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-espresso-800">
+      <div>
+        <!-- Brand Logo -->
+        <div class="p-5 flex items-center justify-between lg:justify-start gap-3 border-b border-espresso-800/80">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 text-amber-300 flex items-center justify-center shadow-inner">
+              <i data-lucide="coffee" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-white text-base tracking-tight leading-none">MUGI BERKAH</div>
+              <div class="text-[11px] text-amber-300/90 font-medium mt-1">Supply Chain System</div>
+            </div>
+          </div>
+          <!-- Mobile Menu Button -->
+          <button id="mobile-nav-toggle" class="lg:hidden p-2 rounded-lg text-stone-300 hover:bg-espresso-800">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav id="sidebar-nav" class="p-3 space-y-1 hidden lg:block">
+          <!-- Populated dynamically by role in app.js -->
+        </nav>
+      </div>
+
+      <!-- Sidebar Footer: Role Switcher / Info -->
+      <div class="hidden lg:block p-4 m-3 rounded-xl bg-espresso-950/70 border border-espresso-800/80 text-xs space-y-2">
+        <div class="flex items-center justify-between text-amber-300 font-semibold">
+          <span>Arsitektur TOGAF</span>
+          <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-[10px]">SCM</span>
+        </div>
+        <p class="text-[11px] text-stone-400 leading-relaxed">
+          Upstream Procurement & Internal Warehouse Inventory Control.
+        </p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+      <!-- TOPBAR -->
+      <header class="bg-white border-b border-stone-200/90 sticky top-0 z-20">
+        <div class="w-full px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 id="page-title" class="text-lg sm:text-xl font-extrabold text-stone-900 tracking-tight">Dashboard Pengadaan</h1>
+            <p id="page-subtitle" class="text-xs text-stone-500 mt-0.5">Ringkasan KPI Rantai Pasok & Peringatan Stok Bahan Baku</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- Refresh Button -->
+            <button
+              id="refresh-data-btn"
+              title="Muat Ulang Data"
+              class="p-2 rounded-xl border border-stone-200 text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition"
+            >
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+
+            <!-- User Profile & Role Badge -->
+            <div class="flex items-center gap-2.5 pl-3 border-l border-stone-200">
+              <div class="text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <span id="topbar-user-name" class="text-xs sm:text-sm font-bold text-stone-900">Rangga</span>
+                  <span id="topbar-role-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-300">
+                    Admin Gudang
+                  </span>
+                </div>
+                <div id="topbar-user-entity" class="text-[11px] text-stone-500 font-medium">admin@mugiberkah.id</div>
+              </div>
+
+              <button
+                id="logout-btn"
+                class="ml-2 px-3 py-2 rounded-xl bg-stone-100 hover:bg-rose-50 text-stone-700 hover:text-rose-700 border border-stone-200 hover:border-rose-200 text-xs font-semibold transition flex items-center gap-1.5"
+              >
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Keluar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- DYNAMIC PAGE CONTAINER -->
+      <main id="main-content" class="flex-1 w-full px-4 sm:px-8 py-6 space-y-6">
+        <!-- Rendered by app.js -->
+      </main>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL OVERLAY CONTAINER                                               -->
+  <!-- ===================================================================== -->
+  <div id="modal-backdrop" class="hidden fixed inset-0 z-40 bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div id="modal-container" class="bg-white rounded-2xl shadow-xl border border-stone-200 max-w-2xl w-full overflow-hidden my-8">
+      <!-- Populated dynamically by app.js -->
+    </div>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

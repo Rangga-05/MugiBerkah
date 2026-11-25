@@ -1,0 +1,19 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Build & Runtime
+dist/
+build/
+*.log
+bun.lockb
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
